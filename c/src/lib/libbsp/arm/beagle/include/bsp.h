@@ -35,8 +35,8 @@
 #include <rtems.h>
 #include <rtems/irq-extension.h>
 
-#include <libcpu/omap3.h>
-#include <libcpu/am335x.h>
+#include <bsp/omap3.h>
+#include <bsp/am335x.h>
 
 #define BSP_FEATURE_IRQ_EXTENSION
 
@@ -59,59 +59,59 @@
 static inline void
 write32(uint32_t address, uint32_t value)
 {
-  REG(address) = value;
+    REG(address) = value;
 }
 
 /* Read an uint32_t from a memory address */
 static inline uint32_t
 read32(uint32_t address)
 {
-  return REG(address);
+    return REG(address);
 }
 
 /* Set a 32 bits value depending on a mask */
 static inline void
 set32(uint32_t address, uint32_t mask, uint32_t value)
 {
-  uint32_t val;
-  val = read32(address);
-  /* clear the bits */
-  val &= ~(mask);
-  /* apply the value using the mask */
-  val |= (value & mask);
-  write32(address, val);
+    uint32_t val;
+    val = read32(address);
+    /* clear the bits */
+    val &= ~(mask);
+    /* apply the value using the mask */
+    val |= (value & mask);
+    write32(address, val);
 }
 
 /* Write a uint16_t value to a memory address. */
 static inline void
 write16(uint32_t address, uint16_t value)
 {
-  REG16(address) = value;
+    REG16(address) = value;
 }
 
 /* Read an uint16_t from a memory address */
 static inline uint16_t
 read16(uint32_t address)
 {
-  return REG16(address);
+    return REG16(address);
 }
 
 /* Data synchronization barrier */
 static inline void dsb(void)
 {
-        asm volatile("dsb" : : : "memory");
+    asm volatile("dsb" : : : "memory");
 }
 
 /* Instruction synchronization barrier */
 static inline void isb(void)
 {
-        asm volatile("isb" : : : "memory");
+    asm volatile("isb" : : : "memory");
 }
 
 /* flush data cache */
 static inline void flush_data_cache(void)
 {
-        asm volatile("mov r0, #0; mcr p15, #0, r0, c7, c10, #4" : : : "memory");
+    asm volatile("mov r0, #0; mcr p15, #0, r0, c7, c10, #4" : : : "memory");
 }
 
 
@@ -144,89 +144,86 @@ static inline void flush_data_cache(void)
 #endif
 
 #if IS_DM3730
-#define BSP_DEVICEMEM_START	0x48000000
-#define BSP_DEVICEMEM_END	0x5F000000
+#define BSP_DEVICEMEM_START 0x48000000
+#define BSP_DEVICEMEM_END   0x5F000000
 #endif
 
 #if IS_AM335X
-#define BSP_DEVICEMEM_START	0x44000000
-#define BSP_DEVICEMEM_END	0x57000000
+#define BSP_DEVICEMEM_START 0x44000000
+#define BSP_DEVICEMEM_END   0x57000000
 #endif
 
 /* per-target uart config */
 #if IS_AM335X
-#define BSP_CONSOLE_UART	1
-#define BSP_CONSOLE_UART_BASE	BEAGLE_BASE_UART_1
-#define BSP_CONSOLE_UART_IRQ	OMAP3_UART1_IRQ
-#define BEAGLE_BASE_UART_1	0x44E09000
-#define BEAGLE_BASE_UART_2	0x48022000
-#define BEAGLE_BASE_UART_3	0x48024000
+#define BSP_CONSOLE_UART        1
+#define BSP_CONSOLE_UART_BASE   BEAGLE_BASE_UART_1
+#define BSP_CONSOLE_UART_IRQ    OMAP3_UART1_IRQ
+#define BEAGLE_BASE_UART_1      0x44E09000
+#define BEAGLE_BASE_UART_2      0x48022000
+#define BEAGLE_BASE_UART_3      0x48024000
 #endif
 
 /* per-target uart config */
 #if IS_DM3730
-#define BSP_CONSOLE_UART	3
-#define BSP_CONSOLE_UART_BASE	BEAGLE_BASE_UART_3
-#define BSP_CONSOLE_UART_IRQ	OMAP3_UART3_IRQ
-#define BEAGLE_BASE_UART_1	0x4806A000
-#define BEAGLE_BASE_UART_2	0x4806C000
-#define BEAGLE_BASE_UART_3	0x49020000
+#define BSP_CONSOLE_UART        3
+#define BSP_CONSOLE_UART_BASE   BEAGLE_BASE_UART_3
+#define BSP_CONSOLE_UART_IRQ    OMAP3_UART3_IRQ
+#define BEAGLE_BASE_UART_1      0x4806A000
+#define BEAGLE_BASE_UART_2      0x4806C000
+#define BEAGLE_BASE_UART_3      0x49020000
 #endif
 
 /* i2c stuff */
 typedef struct {
-  uint32_t rx_or_tx;
-  uint32_t stat;
-  uint32_t ctrl;
-  uint32_t clk_hi;
-  uint32_t clk_lo;
-  uint32_t adr;
-  uint32_t rxfl;
-  uint32_t txfl;
-  uint32_t rxb;
-  uint32_t txb;
-  uint32_t s_tx;
-  uint32_t s_txfl;
+    uint32_t rx_or_tx;
+    uint32_t stat;
+    uint32_t ctrl;
+    uint32_t clk_hi;
+    uint32_t clk_lo;
+    uint32_t adr;
+    uint32_t rxfl;
+    uint32_t txfl;
+    uint32_t rxb;
+    uint32_t txb;
+    uint32_t s_tx;
+    uint32_t s_txfl;
 } beagle_i2c;
 
 /* sctlr */
 /* Read System Control Register */
 static inline uint32_t read_sctlr()
 {
-  uint32_t ctl;
+    uint32_t ctl;
 
-  asm volatile("mrc p15, 0, %[ctl], c1, c0, 0 @ Read SCTLR\n\t"
-    : [ctl] "=r" (ctl));
-
-  return ctl;
+    asm volatile("mrc p15, 0, %[ctl], c1, c0, 0 @ Read SCTLR\n\t"
+        : [ctl] "=r" (ctl));
+    return ctl;
 }
 
 /* Write System Control Register */
 static inline void write_sctlr(uint32_t ctl)
 {
-  asm volatile("mcr p15, 0, %[ctl], c1, c0, 0 @ Write SCTLR\n\t"
-    : : [ctl] "r" (ctl));
-  isb();
+    asm volatile("mcr p15, 0, %[ctl], c1, c0, 0 @ Write SCTLR\n\t"
+        : : [ctl] "r" (ctl));
+    isb();
 }
 
 /* Read Auxiliary Control Register */
 static inline uint32_t read_actlr()
 {
-  uint32_t ctl;
+    uint32_t ctl;
 
-       	asm volatile("mrc p15, 0, %[ctl], c1, c0, 1 @ Read ACTLR\n\t"
-       		: [ctl] "=r" (ctl));
-
-       	return ctl;
+    asm volatile("mrc p15, 0, %[ctl], c1, c0, 1 @ Read ACTLR\n\t"
+            : [ctl] "=r" (ctl));
+    return ctl;
 }
 
 /* Write Auxiliary Control Register */
 static inline void write_actlr(uint32_t ctl)
 {
-  asm volatile("mcr p15, 0, %[ctl], c1, c0, 1 @ Write ACTLR\n\t"
-    : : [ctl] "r" (ctl));
-
-       	isb();
+    asm volatile("mcr p15, 0, %[ctl], c1, c0, 1 @ Write ACTLR\n\t"
+        : : [ctl] "r" (ctl));
+    isb();
 }
 
 /* Write Translation Table Base Control Register */
@@ -261,71 +258,72 @@ static inline void write_dacr(uint32_t dacr)
 
 static inline void refresh_tlb(void)
 {
-        dsb();
+    dsb();
 
-        /* Invalidate entire unified TLB */
-        asm volatile("mcr p15, 0, %[zero], c8, c7, 0 @ TLBIALL\n\t" : : [zero] "r" (0));
+    /* Invalidate entire unified TLB */
+    asm volatile("mcr p15, 0, %[zero], c8, c7, 0 @ TLBIALL\n\t" 
+        : : [zero] "r" (0));
 
-        /*
-         * Invalidate all instruction caches to PoU.
-         * Also flushes branch target cache.
-         */
-        asm volatile("mcr p15, 0, %[zero], c7, c5, 0" : : [zero] "r" (0));
+    /* Invalidate all instruction caches to PoU.
+     * Also flushes branch target cache. */
+    asm volatile("mcr p15, 0, %[zero], c7, c5, 0" 
+        : : [zero] "r" (0));
 
-        /* Invalidate entire branch predictor array */
-        asm volatile("mcr p15, 0, %[zero], c7, c5, 6" : : [zero] "r" (0)); /* flush BTB */
+    /* Invalidate entire branch predictor array */
+    asm volatile("mcr p15, 0, %[zero], c7, c5, 6" 
+        : : [zero] "r" (0)); /* flush BTB */
 
-        dsb();
-        isb();
+    dsb();
+    isb();
 }
 
 /* Read Translation Table Base Register 0 */
 static inline uint32_t read_ttbr0()
 {
-        uint32_t bar;
+    uint32_t bar;
 
-        asm volatile("mrc p15, 0, %[bar], c2, c0, 0 @ Read TTBR0\n\t"
-                        : [bar] "=r" (bar));
+    asm volatile("mrc p15, 0, %[bar], c2, c0, 0 @ Read TTBR0\n\t"
+        : [bar] "=r" (bar));
 
-        return bar & ARM_TTBR_ADDR_MASK;
+    return bar & ARM_TTBR_ADDR_MASK;
 }
 
 
 /* Read Translation Table Base Register 0 */
 static inline uint32_t read_ttbr0_unmasked()
 {
-        uint32_t bar;
+    uint32_t bar;
 
-        asm volatile("mrc p15, 0, %[bar], c2, c0, 0 @ Read TTBR0\n\t"
-                        : [bar] "=r" (bar));
+    asm volatile("mrc p15, 0, %[bar], c2, c0, 0 @ Read TTBR0\n\t"
+        : [bar] "=r" (bar));
 
-        return bar;
+    return bar;
 }
 
 /* Write Translation Table Base Register 0 */
 static inline void write_ttbr0(uint32_t bar)
 {
-        dsb();
-        isb();
-        /* In our setup TTBR contains the base address *and* the flags
-           but other pieces of the kernel code expect ttbr to be the
-           base address of the l1 page table. We therefore add the
-           flags here and remove them in the read_ttbr0 */
-        uint32_t v  =  (bar  & ARM_TTBR_ADDR_MASK ) | ARM_TTBR_FLAGS_CACHED;
-        asm volatile("mcr p15, 0, %[bar], c2, c0, 0 @ Write TTBR0\n\t"
-                        : : [bar] "r" (v));
+    dsb();
+    isb();
+    /* In our setup TTBR contains the base address *and* the flags
+       but other pieces of the kernel code expect ttbr to be the
+       base address of the l1 page table. We therefore add the
+       flags here and remove them in the read_ttbr0 */
+    uint32_t v  =  (bar  & ARM_TTBR_ADDR_MASK ) | ARM_TTBR_FLAGS_CACHED;
+    asm volatile("mcr p15, 0, %[bar], c2, c0, 0 @ Write TTBR0\n\t"
+        : : [bar] "r" (v));
 
-        refresh_tlb();
+    refresh_tlb();
 }
 
 /* Behaviour on fatal error; default: test-friendly.
  * set breakpoint to bsp_fatal_extension.
  */
 /* Enabling BSP_PRESS_KEY_FOR_RESET prevents noninteractive testing */
-/* #define BSP_PRESS_KEY_FOR_RESET	1 */ 
-#define BSP_PRINT_EXCEPTION_CONTEXT 1	
+/*#define  BSP_PRESS_KEY_FOR_RESET     1 */ 
+#define    BSP_PRINT_EXCEPTION_CONTEXT 1
     /* human-readable exception info */
-#define BSP_RESET_BOARD_AT_EXIT 1
+#define    BSP_RESET_BOARD_AT_EXIT 1
     /* causes qemu to exit, signaling end of test */
 
 
