@@ -17,43 +17,11 @@
 #include <rtems.h>
 #include <bsp.h>
 
+#include <omap_timer.h>
+
 #ifdef ARM_MULTILIB_ARCH_V4
 
-struct omap_timer_registers;
-
-struct omap_timer
-{
-  uint32_t base;
-  int irq_nr;
-  struct omap_timer_registers *regs;
-};
-
-struct omap_timer_registers
-{
-  uint32_t TIDR;
-  uint32_t TIOCP_CFG;
-  uint32_t TISTAT;
-  uint32_t TISR;
-  uint32_t TIER;
-  uint32_t TWER;
-  uint32_t TCLR;
-  uint32_t TCRR;
-  uint32_t TLDR;
-  uint32_t TTGR;
-  uint32_t TWPS;
-  uint32_t TMAR;
-  uint32_t TCAR1;
-  uint32_t TSICR;
-  uint32_t TCAR2;
-  uint32_t TPIR;
-  uint32_t TNIR;
-  uint32_t TCVR;
-  uint32_t TOCR;
-  uint32_t TOWR;
-
-};
-
-static struct omap_timer_registers regs_v1 = {
+static omap_timer_registers_t regs_v1 = {
   .TIDR = OMAP3_TIMER_TIDR,
   .TIOCP_CFG = OMAP3_TIMER_TIOCP_CFG,
   .TISTAT = OMAP3_TIMER_TISTAT,
@@ -77,7 +45,7 @@ static struct omap_timer_registers regs_v1 = {
 };
 
 /* AM335X has a different ip block for the non 1ms timers */
-static struct omap_timer_registers regs_v2 = {
+static omap_timer_registers_t regs_v2 = {
   .TIDR = AM335X_TIMER_TIDR,
   .TIOCP_CFG = AM335X_TIMER_TIOCP_CFG,
   .TISTAT = AM335X_TIMER_IRQSTATUS_RAW,
@@ -99,19 +67,21 @@ static struct omap_timer_registers regs_v2 = {
   .TOCR = -1,		/* UNDEF */
   .TOWR = -1		/* UNDEF */
 };
+
 /* which timers are in use? target-dependent.
  * initialize at compile time.
  */
+
 #if IS_DM3730
 
-static struct omap_timer dm37xx_timer = {
+static omap_timer_t dm37xx_timer = {
   .base = OMAP3_GPTIMER1_BASE,
   .irq_nr = OMAP3_GPT1_IRQ,
   .regs = &regs_v1
 };
 
 /* free running timer */
-static struct omap_timer dm37xx_fr_timer = {
+static omap_timer_t dm37xx_fr_timer = {
   .base = OMAP3_GPTIMER10_BASE,
   .irq_nr = OMAP3_GPT10_IRQ,
   .regs = &regs_v1
@@ -119,28 +89,28 @@ static struct omap_timer dm37xx_fr_timer = {
 
 static struct omap_timer *fr_timer = &dm37xx_fr_timer;
 static struct omap_timer *timer = &dm37xx_timer;
-#endif
+
+#endif 
 
 #if IS_AM335X
 
 /* normal timer */
-static struct omap_timer am335x_timer = {
+static omap_timer_t am335x_timer = {
   .base = AM335X_DMTIMER1_1MS_BASE,
   .irq_nr = AM335X_INT_TINT1_1MS,
   .regs = &regs_v1
 };
 
 /* free running timer */
-static struct omap_timer am335x_fr_timer = {
+static omap_timer_t am335x_fr_timer = {
   .base = AM335X_DMTIMER7_BASE,
   .irq_nr = AM335X_INT_TINT7,
   .regs = &regs_v2
 };
 
-
-
 static struct omap_timer *fr_timer = &am335x_fr_timer;
 static struct omap_timer *timer = &am335x_timer;
+
 #endif
 
 static int done = 0;
