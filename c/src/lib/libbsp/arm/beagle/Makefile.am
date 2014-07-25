@@ -42,6 +42,9 @@ include_bsp_HEADERS += include/irq.h
 include_bsp_HEADERS += include/i2c.h
 
 include_libcpu_HEADERS = ../../../libcpu/arm/shared/include/arm-cp15.h
+include_libcpu_HEADERS = ../../../libcpu/arm/shared/include/omap3.h
+include_libcpu_HEADERS = ../../../libcpu/arm/shared/include/am335x.h
+include_libcpu_HEADERS = ../../../libcpu/arm/shared/include/omap_timer.h
 
 ###############################################################################
 #                  Data                                                       #
