@@ -83,7 +83,6 @@ static uint32_t get_mir_reg(int vector, uint32_t *mask)
 
   if(vector <   0) while(1) ;
   if(vector <  32) return OMAP3_INTCPS_MIR0;
-  if(vector <  32) return OMAP3_INTCPS_MIR0;
   if(vector <  64) return OMAP3_INTCPS_MIR1;
   if(vector <  96) return OMAP3_INTCPS_MIR2;
   if(vector < 128) return OMAP3_INTCPS_MIR3;
