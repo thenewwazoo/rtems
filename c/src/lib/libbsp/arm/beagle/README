@@ -28,7 +28,7 @@ To build BSPs for the beaglebone white and beagleboard xm:
 
 $ mkdir b-beagle
 $ cd b-beagle
-$ ../claas-rtems/configure --target=arm-rtems4.11 --enable-rtemsbsp="beaglebonewhite beagleboardxm"
+$ ../rtems/configure --target=arm-rtems4.11 --enable-rtemsbsp="beaglebonewhite beagleboardxm"
 $ make all
 
 This should give you .exes somewhere.
