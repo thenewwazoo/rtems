@@ -35,8 +35,8 @@
 #include <rtems.h>
 #include <rtems/irq-extension.h>
 
-#include <bsp/omap3.h>
-#include <bsp/am335x.h>
+#include <libcpu/omap3.h>
+#include <libcpu/am335x.h>
 
 #define BSP_FEATURE_IRQ_EXTENSION
 

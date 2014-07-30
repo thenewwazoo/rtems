@@ -17,7 +17,7 @@
 #include <rtems.h>
 #include <bsp.h>
 
-#include <omap_timer.h>
+#include <libcpu/omap_timer.h>
 
 #ifdef ARM_MULTILIB_ARCH_V4
 

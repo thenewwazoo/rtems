@@ -5,18 +5,18 @@ $(srcdir)/preinstall.am: Makefile.am
 	$(AMPOLISH3) $(srcdir)/Makefile.am > $(srcdir)/preinstall.am
 endif
 
+all-am: $(PREINSTALL_FILES)
+
+PREINSTALL_FILES =
+CLEANFILES = $(PREINSTALL_FILES)
+
 PREINSTALL_DIRS =
 DISTCLEANFILES += $(PREINSTALL_DIRS)
 
 all-local: $(TMPINSTALL_FILES)
 
 TMPINSTALL_FILES =
-CLEANFILES = $(TMPINSTALL_FILES)
-
-all-am: $(PREINSTALL_FILES)
-
-PREINSTALL_FILES =
-CLEANFILES += $(PREINSTALL_FILES)
+CLEANFILES += $(TMPINSTALL_FILES)
 
 $(PROJECT_LIB)/$(dirstamp):
 	@$(MKDIR_P) $(PROJECT_LIB)
@@ -117,6 +117,18 @@ PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/i2c.h
 $(PROJECT_INCLUDE)/libcpu/arm-cp15.h: ../../../libcpu/arm/shared/include/arm-cp15.h $(PROJECT_INCLUDE)/libcpu/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/libcpu/arm-cp15.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/libcpu/arm-cp15.h
+
+$(PROJECT_INCLUDE)/libcpu/omap3.h: ../../../libcpu/arm/shared/include/omap3.h $(PROJECT_INCLUDE)/libcpu/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/libcpu/omap3.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/libcpu/omap3.h
+
+$(PROJECT_INCLUDE)/libcpu/am335x.h: ../../../libcpu/arm/shared/include/am335x.h $(PROJECT_INCLUDE)/libcpu/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/libcpu/am335x.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/libcpu/am335x.h
+
+$(PROJECT_INCLUDE)/libcpu/omap_timer.h: ../../../libcpu/arm/shared/include/omap_timer.h $(PROJECT_INCLUDE)/libcpu/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/libcpu/omap_timer.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/libcpu/omap_timer.h
 
 $(PROJECT_LIB)/start.$(OBJEXT): start.$(OBJEXT) $(PROJECT_LIB)/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_LIB)/start.$(OBJEXT)
