@@ -5,15 +5,15 @@
 
 hwtest() ->
     {ok, HesMgr, HesPid} = hes:start_link("/sys/devices/platform/ecap-capture.0/capture"),
-    {ok, CapMgr} = ecap:start_link(),
-    {ok, MleMgr} = mle:start_link(),
+    {ok, CapMgr} = gen_event:start(),
+    {ok, MleMgr} = gen_event:start(),
 
-    {ok, CapRef} = ecap:add_handler(HesMgr, CapMgr, "/sys/devices/platform/ecap-capture.0/cap_reg"),
-    {ok, MleRef} = mle:add_handler(CapMgr, MleMgr, [ [1,1,1,1,2], 1.0e-18, 0.15, 0.945 ] ),
+    ok = gen_event:add_handler(HesMgr, ecap, [CapMgr, "/sys/devices/platform/ecap-capture.0/cap_reg"]),
+    ok = gen_event:add_handler(CapMgr, mle, [MleMgr, [1,1,1,1,2], 1.0e-18, 0.15, 0.945]),
 
     {ok, TehCapRef} = test_gen_event_handler:add_handler(CapMgr, ["CapMgr"]),
     {ok, TehMleRef} = test_gen_event_handler:add_handler(MleMgr, ["MleMgr"]),
-    [ [HesMgr, CapMgr, MleMgr], [CapRef, MleRef], [TehCapRef, TehMleRef], [HesPid] ].
+    [ [ HesMgr, CapMgr, MleMgr], [TehCapRef, TehMleRef], [HesPid] ].
 
 tacho_test_start(Hz, Td, MaxAcc, ErrRate, MinConf) ->
     [ NoneMgr, MleMgr ] = mle_test_start(Td, MaxAcc, ErrRate, MinConf),

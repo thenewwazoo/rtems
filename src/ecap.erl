@@ -18,6 +18,8 @@
         , code_change/3
         ]).
 
+-export([ get_tstamp/2 ]).
+
 -record(state, {whom=undefined, capregfile=undefined}).
 
 %% ===================================================================

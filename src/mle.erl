@@ -13,6 +13,8 @@
          code_change/3, 
          terminate/2]).
 
+-export([ move/2, locate/6 ])
+
 -record(mlestate, { whom, 
                     toothprob, 
                     toothdist, 
@@ -101,6 +103,13 @@ move(S) ->
     Sum = lists:zipwith3( fun(F,M,I) -> F+M+I end, False, Move, Miss ),
     S#mlestate{ toothprob = Sum }.
 
+move(ErrRate, ToothProb) ->
+  False = [ P * ErrRate / 2 || P <- ToothProb ],
+  Move  = [ P * (1-ErrRate) || P <- tools:rrot(ToothProb, 1) ],
+  Miss  = tools:rrot(False, 2),
+  Sum = lists:zipwith3( fun(F,M,I) -> F+M+I end, False, Move, Miss ),
+  Sum.
+
 locate(S, T1) ->
     NumToothPosns = lists:sum(S#mlestate.toothdist),
     Located = lists:zipwith3( fun(D0, D1, P) ->
@@ -113,6 +122,20 @@ locate(S, T1) ->
                               S#mlestate.toothdist,
                               S#mlestate.toothprob),
     S#mlestate{ toothprob = Located }.
+
+locate(ToothDist, PriorStamp, T1, MaxAccel, ErrRate, ToothProb) ->
+  NumToothPosns = lists:sum(ToothDist),
+  Located = lists:zipwith3( fun(D0, D1, P) ->
+                              accel_prob(PriorStamp, D0,    % prior
+                                         T1, D1,            % current
+                                         NumToothPosns, P,
+                                         MaxAccel, ErrRate)
+                            end,
+                            tools:rrot(ToothDist, 1),
+                            ToothDist,
+                            ToothProb
+                          ),
+  Located.
 
 normalize(S) when is_record(S, mlestate) ->
     S#mlestate{ toothprob = normalize(S#mlestate.toothprob) };
